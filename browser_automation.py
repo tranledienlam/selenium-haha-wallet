@@ -794,15 +794,21 @@ class BrowserManager:
                 choice = input("Nhập lựa chọn: ")
             else:
                 choice = '2'
+                is_run = False
                 
-            if choice in ('1', '2'):  # Set up - Chọn profile chạy
-                print(f"[B]. Chọn các profile muốn chạy {'Set up' if choice == '1' else 'Auto'}:")
-                print("0. ALL")
-                for idx, profile in enumerate(profiles, start=1):
-                    print(f"{idx}. {profile['profile']}")
-
-                profile_choice = input("Nhập số và cách nhau bằng dấu cách (nếu chọn nhiều) hoặc 'back'|'b' để quay lại: ")
-
+                
+            if choice in ('1', '2'):
+                
+                if not auto:
+                    print(f"[B]. Chọn các profile muốn chạy {'Set up' if choice == '1' else 'Auto'}:")
+                    print("0. ALL")
+                    for idx, profile in enumerate(profiles, start=1):
+                        print(f"{idx}. {profile['profile']}")
+                
+                    profile_choice = input("Nhập số và cách nhau bằng dấu cách (nếu chọn nhiều) hoặc 'back'|'b' để quay lại: ")
+                else:
+                    profile_choice = '0'
+                
                 if profile_choice.lower() in ["back", "b"]:
                     continue
                 
