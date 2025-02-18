@@ -45,14 +45,14 @@ class HaHaWallet:
         return False
     
     def send_eth(self) -> bool:
-        random_eth = random.uniform(0.00001, 0.001)
+        random_eth = str(round(random.uniform(0.00001, 0.001), 6))
         actions = [
             (Utility.wait_time, 5),
             (self.node.go_to, self.url + '/home.html'),
             (self.node.find_and_click, By.XPATH, '//button[p[text()="Send"]]'),
             (self.node.find_and_click, By.XPATH, '//div[p[text()="ETH"]]'),
             (self.node.find_and_click, By.XPATH, '//div[text()="Account 1 (Smart Wallet)"]'),
-            (self.node.find_and_input, By.CSS_SELECTOR, 'input[type="text"]', str(random_eth)),
+            (self.node.find_and_input, By.CSS_SELECTOR, 'input[type="text"]', random_eth),
             (self.node.find_and_click, By.XPATH, '//button[text()="Next"]'),
             (self.node.find_and_click, By.XPATH, '//button[text()="Confirm"]'),
         ]
@@ -66,10 +66,10 @@ class HaHaWallet:
                 if self.send_eth():
                     continue
                 else:
-                    self.node.stop()
+                    self.node.stop('Send ETH thất bại')
             Utility.wait_time(5)
         else:
-            self.node.stop()
+            self.node.stop('Unlock ví thất bại')
         Utility.wait_time(5)    
         
 
