@@ -1,5 +1,9 @@
 # AUTOMATION HAHA WALLET với Selenium python
 
+## Video demo
+
+[![Watch the video](https://img.youtube.com/vi/UJMR2E_DNM0/0.jpg)](https://www.youtube.com/watch?v=UJMR2E_DNM0)
+
 ## Chức năng
 
 - **Faucet ETH từ Google**: Nhận ETH miễn phí từ trang faucet của Google.
@@ -93,7 +97,7 @@ python3 hahawallet.py
 
 ## Tùy chỉnh cấu hình
 
-Nếu muốn chương trình **tự động chạy tác vụ mà không cần chọn chế độ mỗi lần**, hãy chỉnh sửa file như sau:
+Nếu muốn chương trình **tự động chạy tác vụ mà không cần chọn chế độ menu**, hãy chỉnh sửa file như sau:
 
 1. Tìm dòng sau trong hahawallet.py:
 
