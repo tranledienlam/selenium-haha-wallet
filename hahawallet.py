@@ -21,10 +21,12 @@ class HaHaWallet:
         Utility.wait_time(10)
         self.node.go_to('https://cloud.google.com/application/web3/faucet/ethereum/sepolia')
         self.node.find_and_input(By.CSS_SELECTOR, 'input[id="mat-input-0"]', self.wallet, 0, 5)
-        self.node.find_and_click(By.XPATH, '//button[span[text()=" Receive 0.05 Sepolia ETH "]]')
+        self.node.find_and_click(By.XPATH, '//button[span[text()=" Receive 0.03 Sepolia ETH "]]')
         
     def unlock(self) -> bool:
         actions = [
+            (self.node.go_to, self.url + '/home.html'),
+            (self.node.find_and_click, By.XPATH, '//button[text()="Reload"]', False),
             (self.node.go_to, self.url + '/home.html'),
             (self.node.find_and_input, By.CSS_SELECTOR, "input[type='password']", self.pin),
             (self.node.find_and_click, By.XPATH, "//button[text()='Unlock']")
@@ -60,6 +62,7 @@ class HaHaWallet:
     
     def _run_logic(self):
         self.faucet_eth()
+        
         if self.unlock():
             self.check_in()
             for _ in range(10):
