@@ -24,19 +24,19 @@ class HaHaWallet:
         self.node.find_and_click(By.XPATH, '//button[span[text()=" Receive 0.03 Sepolia ETH "]]')
         
     def unlock(self) -> bool:
+        self.driver.get(f'{self.url}/home.html')
+        self.node.find_and_click(By.XPATH, '//button[text()="Reload"]', False)
+        self.driver.get(f'{self.url}/home.html')
         actions = [
-            (self.node.go_to, self.url + '/home.html'),
-            (self.node.find_and_click, By.XPATH, '//button[text()="Reload"]', False),
-            (self.node.go_to, self.url + '/home.html'),
             (self.node.find_and_input, By.CSS_SELECTOR, "input[type='password']", self.pin),
             (self.node.find_and_click, By.XPATH, "//button[text()='Unlock']")
         ]
         return self.node.execute_chain(actions=actions, message_error='unlock ví không thành công')
 
     def check_in(self) -> bool:
+        Utility.wait_time(5)
+        self.driver.get(f'{self.url}/home.html#quests')
         actions = [
-            (Utility.wait_time, 5),
-            (self.node.go_to, self.url +'/home.html#quests'),
             (self.node.find_and_click, By.XPATH, '//button[text()="Claim"]')
         ]
         
@@ -48,9 +48,9 @@ class HaHaWallet:
     
     def send_eth(self) -> bool:
         random_eth = str(round(random.uniform(0.00001, 0.001), 6))
+        Utility.wait_time(5)
+        self.driver.get(f'{self.url}/home.html')
         actions = [
-            (Utility.wait_time, 5),
-            (self.node.go_to, self.url + '/home.html'),
             (self.node.find_and_click, By.XPATH, '//button[p[text()="Send"]]'),
             (self.node.find_and_click, By.XPATH, '//div[p[text()="ETH"]]'),
             (self.node.find_and_click, By.XPATH, '//div[text()="Account 1 (Smart Wallet)"]'),
