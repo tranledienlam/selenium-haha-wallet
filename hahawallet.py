@@ -21,7 +21,8 @@ class HaHaWallet:
         Utility.wait_time(10)
         self.node.go_to('https://cloud.google.com/application/web3/faucet/ethereum/sepolia')
         self.node.find_and_input(By.CSS_SELECTOR, 'input[id="mat-input-0"]', self.wallet, 0, 5)
-        self.node.find_and_click(By.XPATH, '//button[span[text()=" Receive 0.03 Sepolia ETH "]]')
+        if self.node.find_and_click(By.XPATH, '//button[span[text()=" Receive 0.03 Sepolia ETH "]]'):
+            Utility.wait_time(8)
         
     def unlock(self) -> bool:
         self.driver.get(f'{self.url}/home.html')
@@ -46,9 +47,18 @@ class HaHaWallet:
         
         return False
     
+    def switch_chain(self):
+        self.driver.get(f'{self.url}/home.html')
+        text_chain = self.node.get_text(By.XPATH, '//div[div[div[div[contains(text(), "Account")]]]]//div[1]')
+        if text_chain == "Sepolia":
+            return True
+        
+        if text_chain != "Sepolia":
+            self.node.find_and_click(By.XPATH, '//div[div[div[div[contains(text(), "Account")]]]]//div[1]')
+            return self.node.find_and_click(By.XPATH, '//p[text()="Sepolia (ETH)"]')
+
     def send_eth(self) -> bool:
         random_eth = str(round(random.uniform(0.00001, 0.001), 6))
-        Utility.wait_time(5)
         self.driver.get(f'{self.url}/home.html')
         actions = [
             (self.node.find_and_click, By.XPATH, '//button[p[text()="Send"]]'),
@@ -58,13 +68,20 @@ class HaHaWallet:
             (self.node.find_and_click, By.XPATH, '//button[text()="Next"]'),
             (self.node.find_and_click, By.XPATH, '//button[text()="Confirm"]'),
         ]
-        return self.node.execute_chain(actions=actions, message_error='Send ETH thất bại')
-    
+        if not self.node.execute_chain(actions=actions, message_error='Send ETH thất bại. Thử lại lần nữa'):
+            self.driver.get(f'{self.url}/home.html')
+            return self.node.execute_chain(actions=actions, message_error='Send ETH thất bại')
+        
+        return True
+
     def _run_logic(self):
         self.faucet_eth()
         
+        Utility.wait_time(10)
         if self.unlock():
             self.check_in()
+            self.switch_chain()
+
             for _ in range(10):
                 if self.send_eth():
                     continue
@@ -119,5 +136,5 @@ if __name__ == '__main__':
     manager.run_terminal(
         profiles=PROFILES,
         auto=False,
-        max_concurrent_profiles=4
+        max_concurrent_profiles=1
     )
