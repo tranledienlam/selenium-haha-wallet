@@ -21,7 +21,7 @@ class HaHaWallet:
         Utility.wait_time(10)
         self.node.go_to('https://cloud.google.com/application/web3/faucet/ethereum/sepolia')
         self.node.find_and_input(By.CSS_SELECTOR, 'input[id="mat-input-0"]', self.wallet, 0, 5)
-        if self.node.find_and_click(By.XPATH, '//button[span[text()=" Receive 0.03 Sepolia ETH "]]'):
+        if self.node.find_and_click(By.XPATH, '//button[span[contains(text(), "Sepolia ETH")]]'):
             Utility.wait_time(8)
         
     def unlock(self) -> bool:
@@ -60,7 +60,9 @@ class HaHaWallet:
     def send_eth(self) -> bool:
         random_eth = str(round(random.uniform(0.00001, 0.001), 6))
         self.driver.get(f'{self.url}/home.html')
+        
         actions = [
+            (self.node.find_and_click, By.XPATH, '//p[text()="Legacy Wallet"]'),
             (self.node.find_and_click, By.XPATH, '//button[p[text()="Send"]]'),
             (self.node.find_and_click, By.XPATH, '//div[p[text()="ETH"]]'),
             (self.node.find_and_click, By.XPATH, '//div[text()="Account 1 (Smart Wallet)"]'),
@@ -82,11 +84,14 @@ class HaHaWallet:
             self.check_in()
             self.switch_chain()
 
-            for _ in range(10):
+            i = 0
+            times = 10
+            for _ in range(times):
                 if self.send_eth():
+                    i += 1
                     continue
                 else:
-                    self.node.stop('Send ETH thất bại')
+                    self.node.stop(f'Send ETH thành công {i}/{times}')
             Utility.wait_time(5)
         else:
             self.node.stop('Unlock ví thất bại')
